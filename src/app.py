@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, flash, g
+from flask import Flask, render_template, request, redirect, url_for, flash, g
 from flask_uploads import UploadSet, configure_uploads
 import sqlite3
+import os
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
@@ -16,10 +17,11 @@ midis = UploadSet("MIDIS", "mid")
 app.config["UPLOADED_MIDIS_DEST"] = "uploads"
 configure_uploads(app, midis)
 
+playing = None
+
 
 def get_db():
-    """Opens a new database connection if there is none yet for the
-    current application context."""
+    # Opens a new database connection if there is none yet for the current application context.
     if not hasattr(g, "sqlite_db"):
         g.sqlite_db = sqlite3.connect(DATABASE)
     return g.sqlite_db
@@ -34,14 +36,14 @@ def query_db(query, args=(), one=False):
 
 @app.teardown_appcontext
 def close_db(error):
-    """Closes the database again at the end of the request."""
+    # Closes the database again at the end of the request."""
     if hasattr(g, "sqlite_db"):
         g.sqlite_db.close()
 
 
 @app.route("/")
 def index():
-    return render_template("index.html", playing="Nothing", songs=query_db("select * from songs"))
+    return render_template("index.html", playing=playing, songs=query_db("""SELECT * FROM songs"""))
 
 
 @app.route("/add", methods=["GET", "POST"])
@@ -52,10 +54,38 @@ def add():
             return render_template("add.html")
         filename = midis.save(request.files["midi"])
         dropfactor = request.form["drop-factor"]
-        get_db().cursor().execute("""INSERT INTO songs (name, dropfac) VALUES(?, ?)""", [str(filename), int(dropfactor)])
+        get_db().execute("""INSERT INTO songs (name, dropfac) VALUES(?, ?)""", [str(filename), int(dropfactor)])
         get_db().commit()
         flash(str(filename) + " uploaded", "alert-success")
     return render_template("add.html")
+
+
+@app.route("/stop")
+def stop():
+    global playing
+    playing = None
+
+    # TODO: add function to stop music
+
+    return redirect(url_for("index"))
+
+
+@app.route("/play/<song_id>")
+def play(song_id):
+    global playing
+    playing = query_db("""SELECT * FROM songs WHERE id = ?""", song_id)[0]
+
+    # TODO: add function to play music
+
+    return redirect(url_for("index"))
+
+
+@app.route("/delete/<song_id>")
+def delete(song_id):
+    os.remove("uploads/" + query_db("""SELECT name FROM songs WHERE id = ?""", song_id)[0][0])
+    get_db().execute("""DELETE FROM songs WHERE id = ? """, song_id)
+    get_db().commit()
+    return redirect(url_for("index"))
 
 
 if __name__ == "__main__":
