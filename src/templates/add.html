@@ -9,7 +9,7 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <!-- Custom styles for this template -->
-    <link href="static/index.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='add.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -57,7 +57,7 @@
                    title="Drop Factor"
                    data-content="A drop factor of 0 uses the frequencies as they are. A factor greater than 0 drops all notes by n octaves, while a negative integer makes every note higher.">Drop Factor</label>
             <div class="col-sm-10">
-                <input class="form-control" type="number" value="0" id="drop-factor">
+                <input class="form-control" type="number" value="0" id="drop-factor" name="drop-factor">
             </div>
         </div>
         <div class="form-group">
