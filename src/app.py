@@ -1,8 +1,13 @@
 from flask import Flask, render_template, request, flash
 from flask_uploads import UploadSet, configure_uploads
+import sqlite3
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
+
+db = sqlite3.connect('database.sqlite')
+curs = db.cursor()
+curs.execute("""CREATE TABLE IF NOT EXISTS songs(id INTEGER PRIMARY KEY, name TEXT, dropfac INTEGER)""")
 
 midis = UploadSet("MIDIS", "mid")
 app.config["UPLOADED_MIDIS_DEST"] = "uploads"
