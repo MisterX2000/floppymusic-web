@@ -27,8 +27,8 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="/">Play</a></li>
-                <li><a href="/add">Add</a></li>
+                <li><a href="/">Play</a></li>
+                <li class="active"><a href="/add">Add</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -47,38 +47,26 @@
         {% endif %}
     {% endwith %}
 
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Now playing</h3>
+    <form class="form-horizontal" method=POST enctype=multipart/form-data action="{{ url_for('add') }}">
+        <div class="form-group">
+            <label for="d-input" class="col-sm-2 col-form-label">MIDI File</label>
+            <input type="file" name="midi" class="col-sm-10">
         </div>
-        <div class="panel-body">
-            {{ playing }}
+        <div class="form-group">
+            <label for="drop-factor" class="col-sm-2 col-form-label" data-toggle="popover" data-trigger="hover"
+                   title="Drop Factor"
+                   data-content="A drop factor of 0 uses the frequencies as they are. A factor greater than 0 drops all notes by n octaves, while a negative integer makes every note higher.">Drop Factor</label>
+            <div class="col-sm-10">
+                <input class="form-control" type="number" value="0" id="drop-factor">
+            </div>
         </div>
-    </div>
-
-    <button type="button" class="btn btn-danger center-block"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Stop</button>
-
-    <h2>Songs</h2>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>Nr.</th>
-            <th>Name</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th>1</th>
-            <th>Avici - Levels</th>
-            <th>
-                <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Play</button>
-                <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remove</button>
-            </th>
-        </tr>
-        </tbody>
-    </table>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">Submit
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 
 

@@ -9,16 +9,22 @@ app.config["UPLOADED_MIDIS_DEST"] = "uploads"
 configure_uploads(app, midis)
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def index():
+    return render_template("index.html", playing="Nothing")
+
+
+@app.route("/add", methods=["GET", "POST"])
+def add():
     if request.method == "POST" and "midi" in request.files:
         if request.files['midi'].filename == '':
-            flash("No file selected", "red lighten-3")
-            return render_template("index.html")
+            flash("No file selected", "alert-warning")
+            return render_template("add.html")
         filename = midis.save(request.files["midi"])
-        flash(str(filename) + " uploaded", "green lighten-3")
-    return render_template("index.html")
+        flash(str(filename) + " uploaded", "alert-success")
+    return render_template("add.html")
 
 
 if __name__ == "__main__":
-    app.run()
+    #app.run(host="0.0.0.0")
+    app.run(debug=True)
