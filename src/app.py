@@ -25,6 +25,13 @@ def get_db():
     return g.sqlite_db
 
 
+def query_db(query, args=(), one=False):
+    cur = get_db().execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
+
+
 @app.teardown_appcontext
 def close_db(error):
     """Closes the database again at the end of the request."""
@@ -34,7 +41,7 @@ def close_db(error):
 
 @app.route("/")
 def index():
-    return render_template("index.html", playing="Nothing", songs=None)
+    return render_template("index.html", playing="Nothing", songs=query_db("select * from songs"))
 
 
 @app.route("/add", methods=["GET", "POST"])
@@ -45,7 +52,8 @@ def add():
             return render_template("add.html")
         filename = midis.save(request.files["midi"])
         dropfactor = request.form["drop-factor"]
-        c.execute("""INSERT INTO songs (name, dropfac) VALUES(?, ?)""", filename, dropfactor)
+        get_db().cursor().execute("""INSERT INTO songs (name, dropfac) VALUES(?, ?)""", [str(filename), int(dropfactor)])
+        get_db().commit()
         flash(str(filename) + " uploaded", "alert-success")
     return render_template("add.html")
 

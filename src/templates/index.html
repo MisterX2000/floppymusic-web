@@ -70,16 +70,18 @@
         </tr>
         </thead>
         <tbody>
+        {% for id, name, dropfac in songs %}
         <tr>
-            <th>1</th>
-            <th>Avici - Levels</th>
-            <th>0</th>
+            <th>{{ id }}</th>
+            <th>{{ name }}</th>
+            <th>{{ dropfac }}</th>
             <th>
                 <button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Play</button>
                 <button class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</button>
                 <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remove</button>
             </th>
         </tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>
