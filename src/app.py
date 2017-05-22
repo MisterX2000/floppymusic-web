@@ -74,7 +74,7 @@ def stop():
     return redirect(url_for("index"))
 
 
-@app.route("/play/<song_id>")
+@app.route("/play/<song_id>", methods=["GET", "POST"])
 def play(song_id):
     global playing
     playing = query_db("""SELECT * FROM songs WHERE id = ?""", song_id)[0]

@@ -47,7 +47,7 @@
         {% endif %}
     {% endwith %}
 
-    <form class="form-horizontal" method=POST enctype=multipart/form-data action="{{ url_for('index') }}">
+    <form class="form-horizontal" method=POST enctype=multipart/form-data action="{{ url_for('edit', song_id=song[0][0]) }}">
         <div class="form-group">
             <label class="col-sm-2 col-form-label" for="name">Name</label>
             <div class="col-sm-10">
