@@ -80,7 +80,7 @@
                 <th>
                     <a href="{{ url_for('play', song_id=id) }}" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-play"
                                                                                                      aria-hidden="true"></span> Play</a>
-                    <a href="#" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</a>
+                    <a href="{{ url_for('edit', song_id=id) }}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</a>
                     <a href="{{ url_for('delete', song_id=id) }}" class="btn btn-danger btn-xs" data-toggle="confirmation" data-singleton="true" data-popout="true">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete</a>
                 </th>

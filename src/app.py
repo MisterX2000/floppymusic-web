@@ -84,6 +84,11 @@ def play(song_id):
     return redirect(url_for("index"))
 
 
+@app.route("/edit/<song_id>")
+def edit(song_id):
+    return render_template('edit.html', song=query_db("""SELECT * FROM songs WHERE id=?""", song_id))
+
+
 @app.route("/delete/<song_id>")
 def delete(song_id):
     try:
