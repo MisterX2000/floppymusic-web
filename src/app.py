@@ -74,7 +74,7 @@ def stop():
     return redirect(url_for("index"))
 
 
-@app.route("/play/<song_id>", methods=["GET", "POST"])
+@app.route("/play/<song_id>")
 def play(song_id):
     global playing
     playing = query_db("""SELECT * FROM songs WHERE id = ?""", song_id)[0]
@@ -84,8 +84,13 @@ def play(song_id):
     return redirect(url_for("index"))
 
 
-@app.route("/edit/<song_id>")
+@app.route("/edit/<song_id>", methods=["GET", "POST"])
 def edit(song_id):
+    if request.method == "POST":
+        get_db().execute("""UPDATE songs SET dropfac=? WHERE id=?""", [float(request.form["drop-factor"]), int(song_id)])
+        flash("Edited " + song_id, "alert-success")
+        return redirect(url_for('index'))
+
     return render_template('edit.html', song=query_db("""SELECT * FROM songs WHERE id=?""", song_id))
 
 
