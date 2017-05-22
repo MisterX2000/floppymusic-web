@@ -9,7 +9,7 @@ app.secret_key = "super secret key"
 DATABASE = "database.sqlite"
 db = sqlite3.connect(DATABASE)
 c = db.cursor()
-c.execute("""CREATE TABLE IF NOT EXISTS songs(id INTEGER PRIMARY KEY, name TEXT, dropfac INTEGER)""")
+c.execute("""CREATE TABLE IF NOT EXISTS songs(id INTEGER PRIMARY KEY, name TEXT, dropfac REAL)""")
 db.commit()
 db.close()
 
@@ -54,7 +54,7 @@ def add():
             return render_template("add.html")
         filename = midis.save(request.files["midi"])
         dropfactor = request.form["drop-factor"]
-        get_db().execute("""INSERT INTO songs (name, dropfac) VALUES(?, ?)""", [str(filename), int(dropfactor)])
+        get_db().execute("""INSERT INTO songs (name, dropfac) VALUES(?, ?)""", [str(filename), float(dropfactor)])
         get_db().commit()
         flash(str(filename) + " uploaded", "alert-success")
     return render_template("add.html")
@@ -89,5 +89,5 @@ def delete(song_id):
 
 
 if __name__ == "__main__":
-    #app.run(host="0.0.0.0")
+    #app.run(host="0.0.0.0", debug=True)
     app.run(debug=True)
