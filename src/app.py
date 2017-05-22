@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, g
-from flask_uploads import UploadSet, configure_uploads
+from flask_uploads import UploadSet, configure_uploads, UploadNotAllowed
 import sqlite3
 import os
 
@@ -49,10 +49,14 @@ def index():
 @app.route("/add", methods=["GET", "POST"])
 def add():
     if request.method == "POST" and "midi" in request.files:
-        if request.files['midi'].filename == '':
-            flash("No file selected", "alert-warning")
+        try:
+            if request.files['midi'].filename == '':
+                flash("No file selected", "alert-warning")
+                return render_template("add.html")
+            filename = midis.save(request.files["midi"])
+        except UploadNotAllowed:
+            flash("Upload not allowed (MIDI Files only)", "alert-danger")
             return render_template("add.html")
-        filename = midis.save(request.files["midi"])
         dropfactor = request.form["drop-factor"]
         get_db().execute("""INSERT INTO songs (name, dropfac) VALUES(?, ?)""", [str(filename), float(dropfactor)])
         get_db().commit()
@@ -82,7 +86,10 @@ def play(song_id):
 
 @app.route("/delete/<song_id>")
 def delete(song_id):
-    os.remove("uploads/" + query_db("""SELECT name FROM songs WHERE id = ?""", song_id)[0][0])
+    try:
+        os.remove("uploads/" + query_db("""SELECT name FROM songs WHERE id = ?""", song_id)[0][0])
+    except FileNotFoundError:
+        flash("File not found", "alert-danger")
     get_db().execute("""DELETE FROM songs WHERE id = ? """, song_id)
     get_db().commit()
     return redirect(url_for("index"))
