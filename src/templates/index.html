@@ -81,8 +81,8 @@
                     <a href="{{ url_for('play', song_id=id) }}" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-play"
                                                                                                      aria-hidden="true"></span> Play</a>
                     <a href="#" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</a>
-                    <a href="{{ url_for('delete', song_id=id) }}" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"
-                                                                                                      aria-hidden="true"></span> Delete</a>
+                    <a href="{{ url_for('delete', song_id=id) }}" class="btn btn-danger btn-xs" data-toggle="confirmation" data-singleton="true" data-popout="true">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete</a>
                 </th>
             </tr>
         {% endfor %}
@@ -96,7 +96,8 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="static/init.js"></script>
+<script src="{{ url_for('static', filename='bootstrap-confirmation.js') }}"></script>
+<script src="{{ url_for('static', filename='init.js') }}"></script>
 </body>
 
 </html>
