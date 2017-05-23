@@ -98,7 +98,7 @@ def play(song_id):
 
     # TODO: add function to play music
     try:
-        proc = subprocess.run(["../floppymusic", ["-D " + str(playing[2]), "floppymusic-web/" + app.config["UPLOADED_MIDIS_DEST"] + str(playing[1])]])
+        proc = subprocess.Popen(["sudo", "../floppymusic", "-d " + str(playing[2]), "floppymusic-web/" + app.config["UPLOADED_MIDIS_DEST"] + str(playing[1])])
     except FileNotFoundError:
         flash(flash("Floppymusic file not found", "alert-danger"))
         return redirect(url_for("index"))
