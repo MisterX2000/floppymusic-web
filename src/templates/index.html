@@ -60,7 +60,7 @@
     </div>
 
     <div class="text-center">
-        <a href="{{ url_for('stop') }}" class="btn btn-danger"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Stop</a>
+        <a href="{{ url_for('stop') }}" class="btn btn-danger {% if not playing %}disabled{% endif %}"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Stop</a>
     </div>
 
     <h2>Songs</h2>
@@ -80,9 +80,9 @@
                 <th>{{ name }}</th>
                 <th>{{ dropfac }}</th>
                 <th>
-                    <a href="{{ url_for('play', song_id=id) }}" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Play</a>
-                    <a href="{{ url_for('edit', song_id=id) }}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</a>
-                    <a href="{{ url_for('delete', song_id=id) }}" class="btn btn-danger btn-xs" data-toggle="confirmation" data-singleton="true" data-popout="true" data-placement="right">
+                    <a href="{{ url_for('play', song_id=id) }}" class="btn btn-success btn-xs {% if playing %}disabled{% endif %}"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Play</a>
+                    <a href="{{ url_for('edit', song_id=id) }}" class="btn btn-primary btn-xs {% if playing %}disabled{% endif %}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</a>
+                    <a href="{{ url_for('delete', song_id=id) }}" class="btn btn-danger btn-xs {% if playing %}disabled{% endif %}" data-toggle="confirmation" data-singleton="true" data-popout="true" data-placement="right">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete</a>
                 </th>
             </tr>
