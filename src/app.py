@@ -14,7 +14,7 @@ db.commit()
 db.close()
 
 midis = UploadSet("MIDIS", "mid")
-app.config["UPLOADED_MIDIS_DEST"] = "uploads"
+app.config["UPLOADED_MIDIS_DEST"] = "uploads/"
 configure_uploads(app, midis)
 
 playing = None
@@ -77,7 +77,7 @@ def stop():
 @app.route("/play/<song_id>")
 def play(song_id):
     global playing
-    playing = query_db("""SELECT * FROM songs WHERE id = ?""", song_id)[0]
+    playing = query_db("""SELECT * FROM songs WHERE id=?""", song_id)[0]
 
     # TODO: add function to play music
 
@@ -87,8 +87,17 @@ def play(song_id):
 @app.route("/edit/<song_id>", methods=["GET", "POST"])
 def edit(song_id):
     if request.method == "POST":
-        get_db().execute("""UPDATE songs SET dropfac=? WHERE id=?""", [float(request.form["drop-factor"]), int(song_id)])
-        flash("Edited " + song_id, "alert-success")
+        name = request.form["file-name"]
+        dropfac = request.form["drop-factor"]
+        try:
+            os.rename(app.config["UPLOADED_MIDIS_DEST"] + query_db("""SELECT name FROM songs WHERE id=?""", song_id)[0][0],
+                      app.config["UPLOADED_MIDIS_DEST"] + name + ".mid")
+        except FileNotFoundError:
+            flash("File not found", "alert-danger")
+            return redirect(url_for('index'))
+        get_db().execute("""UPDATE songs SET name=?,dropfac=? WHERE id=?""", [str(name) + ".mid", float(dropfac), int(song_id)])
+        get_db().commit()
+        flash(f"Edited {song_id}. {name}.mid ({dropfac})", "alert-success")
         return redirect(url_for('index'))
 
     return render_template('edit.html', song=query_db("""SELECT * FROM songs WHERE id=?""", song_id))
@@ -97,10 +106,10 @@ def edit(song_id):
 @app.route("/delete/<song_id>")
 def delete(song_id):
     try:
-        os.remove("uploads/" + query_db("""SELECT name FROM songs WHERE id = ?""", song_id)[0][0])
+        os.remove("uploads/" + query_db("""SELECT name FROM songs WHERE id=?""", song_id)[0][0])
     except FileNotFoundError:
         flash("File not found", "alert-danger")
-    get_db().execute("""DELETE FROM songs WHERE id = ? """, song_id)
+    get_db().execute("""DELETE FROM songs WHERE id=? """, song_id)
     get_db().commit()
     return redirect(url_for("index"))
 

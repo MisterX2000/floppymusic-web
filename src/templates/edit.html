@@ -49,10 +49,10 @@
 
     <form class="form-horizontal" method=POST enctype=multipart/form-data action="{{ url_for('edit', song_id=song[0][0]) }}">
         <div class="form-group">
-            <label class="col-sm-2 col-form-label" for="name">Name</label>
+            <label class="col-sm-2 col-form-label" for="file-name">Name</label>
             <div class="col-sm-10">
                 <div class="input-group">
-                    <input class="form-control" type="text" maxlength="64" id="name" value="{{ song[0][1][:-4] }}">
+                    <input class="form-control" type="text" maxlength="64" id="file-name" name="file-name" value="{{ song[0][1][:-4] }}">
                     <div class="input-group-addon">.mid</div>
                 </div>
             </div>
