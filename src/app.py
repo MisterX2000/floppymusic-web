@@ -77,7 +77,10 @@ def stop():
 @app.route("/play/<song_id>")
 def play(song_id):
     global playing
-    playing = query_db("""SELECT * FROM songs WHERE id=?""", song_id)[0]
+    if os.path.isfile(app.config["UPLOADED_MIDIS_DEST"] + query_db("""SELECT name FROM songs WHERE id=?""", song_id)[0][0]):
+        playing = query_db("""SELECT * FROM songs WHERE id=?""", song_id)[0]
+    else:
+        flash("File not found", "alert-danger")
 
     # TODO: add function to play music
 
