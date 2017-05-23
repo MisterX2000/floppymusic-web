@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, g
 from flask_uploads import UploadSet, configure_uploads, UploadNotAllowed
+import subprocess
 import sqlite3
 import os
 
@@ -18,6 +19,7 @@ app.config["UPLOADED_MIDIS_DEST"] = "uploads/"
 configure_uploads(app, midis)
 
 playing = None
+proc = None
 
 
 def get_db():
@@ -67,9 +69,19 @@ def add():
 @app.route("/stop")
 def stop():
     global playing
+    global proc
     playing = None
 
     # TODO: add function to stop music
+    if proc is None:
+        flash("Process not started", "alert-danger")
+    else:
+        if proc.poll() is None:
+            proc.kill()
+            proc.wait()
+            flash("Process stopped", "alert-success")
+        else:
+            flash("Process already stopped", "alert-success")
 
     return redirect(url_for("index"))
 
@@ -77,12 +89,19 @@ def stop():
 @app.route("/play/<song_id>")
 def play(song_id):
     global playing
+    global proc
     if os.path.isfile(app.config["UPLOADED_MIDIS_DEST"] + query_db("""SELECT name FROM songs WHERE id=?""", song_id)[0][0]):
         playing = query_db("""SELECT * FROM songs WHERE id=?""", song_id)[0]
     else:
         flash("File not found", "alert-danger")
+        return redirect(url_for("index"))
 
     # TODO: add function to play music
+    try:
+        proc = subprocess.run(["../floppymusic", ["-D " + str(playing[2]), "floppymusic-web/" + app.config["UPLOADED_MIDIS_DEST"] + str(playing[1])]])
+    except FileNotFoundError:
+        flash(flash("Floppymusic file not found", "alert-danger"))
+        return redirect(url_for("index"))
 
     return redirect(url_for("index"))
 
