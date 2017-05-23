@@ -1,8 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, g
 from flask_uploads import UploadSet, configure_uploads, UploadNotAllowed
+import argparse
 import subprocess
 import sqlite3
 import os
+
+parser = argparse.ArgumentParser(description="IMPORTANT! To ensure floppymusics functionality this script must be run as root.")
+parser.add_argument("--port", help="set Flask web port", default=5000, type=int)
+parser.add_argument("--host", help="set Flask ip binding (host)", default="0.0.0.0")
+parser.add_argument("-debug", help="enable Flask debug option", action='store_true', default=False)
+args = parser.parse_args()
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
@@ -134,6 +141,4 @@ def delete(song_id):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
-    #app.run(host="0.0.0.0", debug=True)
-    #app.run(debug=True)
+    app.run(host=args.host, port=args.port, debug=args.debug)
