@@ -119,7 +119,7 @@ def edit(song_id):
             return redirect(url_for('index'))
         get_db().execute("""UPDATE songs SET name=?,dropfac=? WHERE id=?""", [str(name) + ".mid", float(dropfac), int(song_id)])
         get_db().commit()
-        flash(f"Edited {song_id}. {name}.mid ({dropfac})", "alert-success")
+        flash("Edited {}. {}.mid ({})".format(song_id, name, dropfac), "alert-success")
         return redirect(url_for('index'))
 
     return render_template('edit.html', song=query_db("""SELECT * FROM songs WHERE id=?""", song_id))
