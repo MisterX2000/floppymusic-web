@@ -72,13 +72,11 @@ def stop():
     global proc
     playing = None
 
-    # TODO: add function to stop music
     if proc is None:
         flash("Process not started", "alert-danger")
     else:
         if proc.poll() is None:
-            proc.kill()
-            proc.wait()
+            os.system("sudo kill " + str(proc.pid))
             flash("Process stopped", "alert-success")
         else:
             flash("Process already stopped", "alert-success")
@@ -96,9 +94,8 @@ def play(song_id):
         flash("File not found", "alert-danger")
         return redirect(url_for("index"))
 
-    # TODO: add function to play music
     try:
-        proc = subprocess.Popen(["sudo", "../floppymusic", "-d " + str(playing[2]), "floppymusic-web/" + app.config["UPLOADED_MIDIS_DEST"] + str(playing[1])])
+        proc = subprocess.Popen(["sudo", "./floppymusic", "-d " + str(playing[2]), app.config["UPLOADED_MIDIS_DEST"] + str(playing[1])])
     except FileNotFoundError:
         flash(flash("Floppymusic file not found", "alert-danger"))
         return redirect(url_for("index"))
@@ -137,5 +134,6 @@ def delete(song_id):
 
 
 if __name__ == "__main__":
+    app.run(host="0.0.0.0")
     #app.run(host="0.0.0.0", debug=True)
-    app.run(debug=True)
+    #app.run(debug=True)
