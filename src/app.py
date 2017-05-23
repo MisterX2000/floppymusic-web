@@ -76,7 +76,7 @@ def stop():
         flash("Process not started", "alert-danger")
     else:
         if proc.poll() is None:
-            os.system("sudo kill " + str(proc.pid))
+            proc.terminate()
             flash("Process stopped", "alert-success")
         else:
             flash("Process already stopped", "alert-success")
@@ -95,7 +95,7 @@ def play(song_id):
         return redirect(url_for("index"))
 
     try:
-        proc = subprocess.Popen(["sudo", "./floppymusic", "-d " + str(playing[2]), app.config["UPLOADED_MIDIS_DEST"] + str(playing[1])])
+        proc = subprocess.Popen(["./floppymusic", "-d " + str(playing[2]), app.config["UPLOADED_MIDIS_DEST"] + str(playing[1])])
     except FileNotFoundError:
         flash(flash("Floppymusic file not found", "alert-danger"))
         return redirect(url_for("index"))
