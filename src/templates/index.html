@@ -76,15 +76,15 @@
         <tbody>
         {% for id, name, dropfac in songs %}
             <tr>
-                <th>{{ id }}</th>
-                <th>{{ name }}</th>
-                <th>{{ dropfac }}</th>
-                <th>
+                <th scope="row">{{ id }}</th>
+                <td>{{ name }}</td>
+                <td>{{ dropfac }}</td>
+                <td>
                     <a href="{{ url_for('play', song_id=id) }}" class="btn btn-success btn-xs {% if playing %}disabled{% endif %}"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Play</a>
                     <a href="{{ url_for('edit', song_id=id) }}" class="btn btn-primary btn-xs {% if playing %}disabled{% endif %}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</a>
                     <a href="{{ url_for('delete', song_id=id) }}" class="btn btn-danger btn-xs {% if playing %}disabled{% endif %}" data-toggle="confirmation" data-singleton="true" data-popout="true" data-placement="right">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete</a>
-                </th>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
