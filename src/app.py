@@ -95,8 +95,8 @@ def stop():
 def play(song_id):
     global playing
     global proc
-    if os.path.isfile(app.config["UPLOADED_MIDIS_DEST"] + query_db("""SELECT name FROM songs WHERE id=?""", song_id)[0][0]):
-        playing = query_db("""SELECT * FROM songs WHERE id=?""", song_id)[0]
+    if os.path.isfile(app.config["UPLOADED_MIDIS_DEST"] + query_db("""SELECT name FROM songs WHERE id=?""", (song_id,))[0][0]):
+        playing = query_db("""SELECT * FROM songs WHERE id=?""", (song_id,))[0]
     else:
         flash("File not found", "alert-danger")
         return redirect(url_for("index"))
@@ -116,7 +116,7 @@ def edit(song_id):
         name = request.form["file-name"]
         dropfac = request.form["drop-factor"]
         try:
-            os.rename(app.config["UPLOADED_MIDIS_DEST"] + query_db("""SELECT name FROM songs WHERE id=?""", song_id)[0][0],
+            os.rename(app.config["UPLOADED_MIDIS_DEST"] + query_db("""SELECT name FROM songs WHERE id=?""", (song_id,))[0][0],
                       app.config["UPLOADED_MIDIS_DEST"] + name + ".mid")
         except FileNotFoundError:
             flash("File not found", "alert-danger")
@@ -126,16 +126,16 @@ def edit(song_id):
         flash("Edited {}. {}.mid ({})".format(song_id, name, dropfac), "alert-success")
         return redirect(url_for('index'))
 
-    return render_template('edit.html', song=query_db("""SELECT * FROM songs WHERE id=?""", song_id))
+    return render_template('edit.html', song=query_db("""SELECT * FROM songs WHERE id=?""", (song_id,)))
 
 
 @app.route("/delete/<song_id>")
 def delete(song_id):
     try:
-        os.remove("uploads/" + query_db("""SELECT name FROM songs WHERE id=?""", song_id)[0][0])
+        os.remove("uploads/" + query_db("""SELECT name FROM songs WHERE id=?""", (song_id,))[0][0])
     except FileNotFoundError:
         flash("File not found", "alert-danger")
-    get_db().execute("""DELETE FROM songs WHERE id=? """, song_id)
+    get_db().execute("""DELETE FROM songs WHERE id=? """, (song_id,))
     get_db().commit()
     return redirect(url_for("index"))
 
