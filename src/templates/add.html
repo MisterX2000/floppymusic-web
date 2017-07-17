@@ -8,8 +8,7 @@
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='add.css') }}" rel="stylesheet">
+    <style>body {padding-top: 75px;}</style>
 </head>
 
 <body>
@@ -74,7 +73,7 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="static/init.js"></script>
+<script>$('[data-toggle="popover"]').popover()</script>
 </body>
 
 </html>
